@@ -4,11 +4,12 @@ const Bodies = Matter.Bodies;
 const Constraint = Matter.Constraint;
 
 var engine, world;
-var box1, pig1,pig3;
+var box1, pig1, pig2;
 var backgroundImg,bg,platform;
-var bird, slingshot;
+var bird1,bird2,bird3, slingshot;
 var gameState = "OnSling";
 var score = 0;
+var birds = [];
 
 function preload() {
     backgroundImg = loadImage("sprites/bg.png");
@@ -31,7 +32,7 @@ function setup(){
 
     box3 = new Box(700,240,70,70);
     box4 = new Box(920,240,70,70);
-    pig3 = new Pig(810, 220);
+    pig2 = new Pig(810, 220);
 
     log3 =  new Log(810,180,300, PI/2);
 
@@ -39,10 +40,15 @@ function setup(){
     log4 = new Log(760,120,150, PI/7);
     log5 = new Log(870,120,150, -PI/7);
 
-    bird = new Bird(200,50);
-
+    bird1 = new Bird(200,50);
+    bird2 = new Bird(150,50);
+    bird3 = new Bird(100,50);
     
-    slingshot = new SlingShot(bird.body,{x:200, y:50});
+    birds.push(bird3);
+    birds.push(bird2);
+    birds.push(bird1);
+    
+    slingshot = new SlingShot(bird1.body,{x:200, y:50});
 }
 
 function draw(){
@@ -62,35 +68,40 @@ function draw(){
 
     box3.display();
     box4.display();
-    pig3.display();
-    pig3.Score();
+    pig2.display();
+    pig2.Score();
     log3.display();
 
     box5.display();
     log4.display();
     log5.display();
 
-    bird.display();
+    bird1.display();
+    bird2.display();
+    bird3.display();
     platform.display();
     
-    slingshot.display();    
+    slingshot.display(); 
+    console.log(bird1.body.speed); 
 }
 
 function mouseDragged(){
     if(gameState !== "Launched")
-    Matter.Body.setPosition(bird.body, {x: mouseX , y: mouseY});
+    Matter.Body.setPosition(birds[birds.length-1].body, {x: mouseX , y: mouseY});
 }
 
 
 function mouseReleased(){
     slingshot.fly();
-    gameState = "Launched"; 
+    gameState = "Launched";
+    birds.pop();
 }
 
 function keyPressed(){
-    if(keyCode === 32){
-        gameState = "OnSling"
-        slingshot.attach(bird.body);
+    if(keyCode === 32 && gameState === "Launched" ){
+        gameState = "OnSling"; 
+        Matter.Body.setPosition(birds[birds.length-1].body, {x: 200, y: 50});
+        slingshot.attach(birds[birds.length-1].body);
     }
 }
 
