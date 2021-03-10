@@ -4,122 +4,93 @@ const Bodies = Matter.Bodies;
 const Constraint = Matter.Constraint;
 
 var engine, world;
-var box1, pig1, pig2;
-var backgroundImg,bg,platform;
-var bird1,bird2,bird3, slingshot;
-var gameState = "OnSling";
-var score = 0;
-var birds = [];
-
-function preload() {
-    backgroundImg = loadImage("sprites/bg.png");
-    getBackgroundImage();
-}
+var ground, ball, rope;
+var box1, box2, box3, box4, box5, box6, box7;
+var box8 ,box9 ,box10 ,box11 ,box12, box13 ,box14;
+var box15 ,box16 ,box17 ,box18 ,box19 ,box20 ,box21;
+var color ;
 
 function setup(){
-    var canvas = createCanvas(1200,400);
+    var canvas = createCanvas(1500,700);
     engine = Engine.create();
     world = engine.world;
 
+    ground = new Ground(width/2, 695, 1500, 10);
 
-    ground = new Ground(600,height,1200,20);
-    platform = new Ground(150, 305, 300, 170);
+    ball = new Ball(600,600,50);
 
-    box1 = new Box(700,320,70,70);
-    box2 = new Box(920,320,70,70);
-    pig1 = new Pig(810, 350);
-    log1 = new Log(810,260,300, PI/2);
+    rope = new Rope(ball.body, {x : 600, y : 50});
 
-    box3 = new Box(700,240,70,70);
-    box4 = new Box(920,240,70,70);
-    pig2 = new Pig(810, 220);
+    color = "blue";
+    box1 = new Box(1000, 100, color);
+    box2 = new Box(1000, 100, color);
+    box3 = new Box(1000, 100, color);
+    box4 = new Box(1000, 100, color);
+    box5 = new Box(1000, 100, color);
+    box6 = new Box(1000, 100, color);
+    box7 = new Box(1000, 100, color);
 
-    log3 =  new Log(810,180,300, PI/2);
+    color = "green";
 
-    box5 = new Box(810,160,70,70);
-    log4 = new Log(760,120,150, PI/7);
-    log5 = new Log(870,120,150, -PI/7);
+    box8 = new Box(900, 100, color);
+    box9 = new Box(900, 100, color);
+    box10 = new Box(900, 100, color);
+    box11 = new Box(900, 100, color);
+    box12 = new Box(900, 100, color);
+    box13= new Box(900, 100, color);
+    box14 = new Box(900, 100, color);
 
-    bird1 = new Bird(200,50);
-    bird2 = new Bird(150,50);
-    bird3 = new Bird(100,50);
-    
-    birds.push(bird3);
-    birds.push(bird2);
-    birds.push(bird1);
-    
-    slingshot = new SlingShot(bird1.body,{x:200, y:50});
+    color = "red";
+    box15 = new Box(800, 100, color);
+    box16 = new Box(800, 100, color);
+    box17 = new Box(800, 100, color);
+    box18 = new Box(800, 100, color);
+    box19 = new Box(800, 100, color);
+    box20 = new Box(800, 100, color);
+    box21 = new Box(800, 100, color);
+
 }
 
 function draw(){
-    background(backgroundImg);
+    background(0);
     Engine.update(engine);
     
-    textSize(20);
-    fill(255,0,0);
-    text("Score = "+score,25,50);
+    ground.display();
+
+    ball.display();
+
+    rope.display();
 
     box1.display();
     box2.display();
-    ground.display();
-    pig1.display();
-    pig1.Score();
-    log1.display();
-
     box3.display();
     box4.display();
-    pig2.display();
-    pig2.Score();
-    log3.display();
-
     box5.display();
-    log4.display();
-    log5.display();
-
-    bird1.display();
-    bird2.display();
-    bird3.display();
-    platform.display();
+    box6.display();
+    box7.display();
     
-    slingshot.display(); 
-    console.log(bird1.body.speed); 
+    box8.display();
+    box9.display();
+    box10.display();
+    box11.display();
+    box12.display();
+    box13.display();
+    box14.display();
+
+    box15.display();
+    box16.display();
+    box17.display();
+    box18.display();
+    box19.display();
+    box20.display();
+    box21.display();
+
 }
-
-function mouseDragged(){
-    if(gameState !== "Launched")
-    Matter.Body.setPosition(birds[birds.length-1].body, {x: mouseX , y: mouseY});
-}
-
-
-function mouseReleased(){
-    slingshot.fly();
-    gameState = "Launched";
-    birds.pop();
-}
-
-function keyPressed(){
-    if(keyCode === 32 && gameState === "Launched" ){
-        gameState = "OnSling"; 
-        Matter.Body.setPosition(birds[birds.length-1].body, {x: 200, y: 50});
-        slingshot.attach(birds[birds.length-1].body);
-    }
-}
-
-async function getBackgroundImage()
+function mouseDragged()
 {
-    var response = await fetch("https://worldtimeapi.org/api/timezone/Asia/Kolkata");
-    var responseJSON = await response.json();
-    var dateTime = responseJSON.datetime;
-    var hour = dateTime.slice(11,13);
-
-    console.log(hour);
-    if(hour <= 19 && hour >= 07)
-    {
-        bg = "sprites/bg.png" ;
-    }
-    else
-    {
-        bg = "sprites/bg2.jpg" ;
-    }
-    backgroundImg = loadImage(bg);
+    Matter.Body.setPosition(ball.body, {x: mouseX, y: mouseY});
+}
+function mouseReleased()
+{
+    Matter.Body.applyForce(ball.body, ball.body.position, {x:50, y:-30});
 }
